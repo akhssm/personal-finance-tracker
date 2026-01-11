@@ -2,7 +2,7 @@ import React from 'react';
 import './styles.css';
 function Header() {
   function logoutFnc() {
-    alert("Logut!");
+    alert("Logout!");
   }
 
   return (

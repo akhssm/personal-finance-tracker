@@ -1,13 +1,14 @@
 import React from "react";
-import Header from '../components/Header';
-import SignupSignin from '../components/SignupSignin';
+import Header from "../components/Header";
+import SignupSigninComponent from "../components/SignupSignin";
 
 const Signup = () => {
   return (
     <div>
       <Header />
-      <div className="wrapper"></div>
-      <SignupSignin />
+      <div className="wrapper">
+        <SignupSigninComponent />
+      </div>
     </div>
   );
 };
