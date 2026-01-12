@@ -86,6 +86,7 @@ function SignupSigninComponent () {
   }
 
   async function createDoc(user) {
+    setLoading(true);
     // Make sure that the doc with uid doesn't exist
     // Create a doc.
     if (!user) return;
@@ -96,16 +97,19 @@ function SignupSigninComponent () {
       try{
         await setDoc(doc(db, "users", user.uid), {
           name: user.displayName ? user.displayName: name,
-          email,
+          email: user.email,
           photoURL: user.photoURL ? user.photoURL: "",
-          createdAt,
+          createdAt: new Date(),
         });
         toast.success("Doc created!");
+        setLoading(false);
       } catch(e){
         toast.error(e.message);
+        setLoading(false);
       }
     } else {
-      toast.error("Doc already exists")
+      toast.error("Doc already exists");
+      setLoading(false);
     }
   }
 
