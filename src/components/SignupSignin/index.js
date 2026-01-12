@@ -3,15 +3,19 @@ import './styles.css';
 import Input from '../Input';
 import Button from '../Button';
 import { toast } from 'react-toastify';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../firebase';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { auth, db } from '../../firebase';
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { useNavigate } from 'react-router-dom';
 
 function SignupSigninComponent () {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [loginForm, setLoginForm] = useState(false);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   function signupWithEmail() {
     setLoading(true);
@@ -20,7 +24,7 @@ function SignupSigninComponent () {
     console.log("password", password);
     console.log("confirmpassword", confirmPassword);
     // Authenticate the user, or basically create a new account using email and password
-    if (name != "" && email!="" && password !="" && confirmPassword!="") {
+    if (name !== "" && email!=="" && password !=="" && confirmPassword!=="") {
         if (password==confirmPassword) {
             createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
@@ -34,6 +38,7 @@ function SignupSigninComponent () {
               setPassword("");
               setConfirmPassword("");
               createDoc(user);
+              navigate("/dashboard");
               // Create A doc with user id as the following id
             })
             .catch((error) => {
@@ -54,12 +59,97 @@ function SignupSigninComponent () {
     }
   }
 
-  function createDoc(user) {
+  function loginUsingEmail() {
+    setLoading(true);
+    console.log("Email", email);
+    console.log("password", password);
+
+    if (email!=="" && password !=="") {
+      signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+        toast.success("User Logged In!");
+        console.log("User Logged in", user);
+        setLoading(false);
+        navigate("/dashboard");
+      })
+      .catch((error) => {
+        setLoading(false);
+        toast.error(error.code);
+      });
+
+    } else {
+      toast.error("All fields are mandatory!")
+      setLoading(false);
+    }
+  }
+
+  async function createDoc(user) {
     // Make sure that the doc with uid doesn't exist
     // Create a doc.
+    if (!user) return;
+
+    const userRef = doc(db, "users", user.uid);
+    const userData = await getDoc(userRef);
+    if (!userData.exists()) {
+      try{
+        await setDoc(doc(db, "users", user.uid), {
+          name: user.displayName ? user.displayName: name,
+          email,
+          photoURL: user.photoURL ? user.photoURL: "",
+          createdAt,
+        });
+        toast.success("Doc created!");
+      } catch(e){
+        toast.error(e.message);
+      }
+    } else {
+      toast.error("Doc already exists")
+    }
   }
 
   return (
+    <>
+    {loginForm ? (
+    <div className="signup-wrapper">
+       <h2 className='title'>
+        Login on <span style={{ color: 'var(--theme)' }}>Financely.</span>
+       </h2>
+       <form>
+        <Input
+            type="email"
+            label={"Email"}
+            state={email}
+            setState={setEmail}
+            placeholder={"JohnDoe@gmail.com"}
+        />
+        <Input
+            type="password"
+            label={"Password"}
+            state={password}
+            setState={setPassword}
+            placeholder={"Example@123"}
+        />
+        <Button 
+          disabled={loading}
+          text={loading ? "Loading..." : "Login Using Email and Password"}
+          onClick={loginUsingEmail}
+        />
+        <p className="p-login">or</p>
+        <Button text={loading?"Loading...":"Login Using Google"} blue={true} />
+        <p 
+          className="p-login"
+          style={{ cursor: "pointer" }}
+          onClick={()=> setLoginForm(!loginForm)}
+        >
+          Or Don't Have an Account ? click Here
+        </p>
+       </form>
+    </div>
+
+    ) : (
+
     <div className="signup-wrapper">
        <h2 className='title'>
         Sign Up on <span style={{ color: 'var(--theme)' }}>Financely.</span>
@@ -97,10 +187,19 @@ function SignupSigninComponent () {
           text={loading ? "Loading..." : "Signup Using Email and Password"} 
           onClick={signupWithEmail}
         />
-        <p style={{textAlign:"center", margin: 0}}>or</p>
-        <Button text={loading?"Loading...":"Signup Using Google"} blue={true} />
+        <p className="p-login">or</p>
+        <Button text={loading ? "Loading..." : "Signup Using Google"} blue={true} />
+        <p 
+          className="p-login"
+          style={{ cursor: "pointer" }}
+          onClick={()=> setLoginForm(!loginForm)}
+        >
+          Or Have an Account Already? click Here
+        </p>
        </form>
     </div>
+    )}
+    </>
   );
 }
 
