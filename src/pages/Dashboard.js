@@ -2,10 +2,24 @@ import React, { useState } from 'react';
 import Header from '../components/Header';
 import Cards from '../components/Cards';
 import { Modal } from 'antd';
+import AddExpenseModal from '../components/Modals/AddExpense';
+import AddIncomeModal from '../components/Modals/AddIncome';
 
 const Dashboard = () => {
   const [isExpenseModalVisible, setIsExpenseModalVisible] = useState(false);
   const [isIncomeModalVisible, setIsIncomeModalVisible] = useState(false);
+
+  const onFinish = (values, type) => {
+    console.log("On Finish", values, type);
+  };
+
+  const handleExpenseCancel = () => {
+    setIsExpenseModalVisible(false);
+  };
+
+  const handleIncomeCancel = () => {
+    setIsIncomeModalVisible(false);
+  };
 
   return (
     <div>
@@ -16,29 +30,17 @@ const Dashboard = () => {
         showIncomeModal={() => setIsIncomeModalVisible(true)}
       />
 
-      {/* Income Modal */}
-      <Modal
-        style={{ fontWeight: 600 }}
-        title="Add Income"
-        open={isIncomeModalVisible}
-        onCancel={() => setIsIncomeModalVisible(false)}
-        footer={null}
-        centered
-      >
-        Income
-      </Modal>
+      <AddExpenseModal
+            isExpenseModalVisible={isExpenseModalVisible}
+            handleExpenseCancel={handleExpenseCancel}
+            onFinish={onFinish}
+          />
 
-      {/* Expense Modal */}
-      <Modal
-        style={{ fontWeight: 600 }}
-        title="Add Expense"
-        open={isExpenseModalVisible}
-        onCancel={() => setIsExpenseModalVisible(false)}
-        footer={null}
-        centered
-      >
-        Expense
-      </Modal>
+          <AddIncomeModal
+            isIncomeModalVisible={isIncomeModalVisible}
+            handleIncomeCancel={handleIncomeCancel}
+            onFinish={onFinish}
+          />
     </div>
   );
 };
