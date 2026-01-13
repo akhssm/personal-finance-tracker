@@ -9,6 +9,7 @@ import { addDoc, collection, getDocs, query } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import moment from 'moment';
+import TransactionsTable from '../components/TransactionsTable';
 
 const Dashboard = () => {
   // const transactions = [
@@ -33,6 +34,9 @@ const Dashboard = () => {
   const [user] = useAuthState(auth);
   const [isExpenseModalVisible, setIsExpenseModalVisible] = useState(false);
   const [isIncomeModalVisible, setIsIncomeModalVisible] = useState(false);
+  const [income, setIncome] = useState(0);
+  const [expense, setExpense] = useState(0);
+  const [totalBalance, setTotalBalance] = useState(0);
 
   const onFinish = (values, type) => {
     const newTransaction = {
@@ -54,6 +58,10 @@ const Dashboard = () => {
       );
       console.log("Document written with ID: ", docRef.id);
       toast.success("Transaction added successfully!");
+      let newArr = transactions;
+      newArr.push(transaction);
+      setTransactions(newArr);
+      calculateBalance();
     } catch (e) {
       console.error("Error adding document: ", e);
       toast.error("Failed to add transaction. Please try again.");
@@ -63,7 +71,28 @@ const Dashboard = () => {
   useEffect(() => {
     // Get all docs from the collections
     fetchTransactions();
-  }, []);
+  }, [user]);
+
+  useEffect(() => {
+    calculateBalance();
+  }, [transactions]);
+
+  function calculateBalance() {
+    let incomeTotal = 0;
+    let expenseTotal = 0;
+
+    transactions.forEach((transaction) => {
+      if (transaction.type === "income") {
+        incomeTotal += transaction.amount;
+      } else {
+        expenseTotal += transaction.amount;
+      }
+    });
+
+    setIncome(incomeTotal);
+    setExpense(expenseTotal);
+    setTotalBalance(incomeTotal - expenseTotal);
+  }
 
   async function fetchTransactions() {
     setLoading(true);
@@ -99,6 +128,9 @@ const Dashboard = () => {
       ) : (
         <>
       <Cards
+        income={income}
+        expense={expense}
+        totalBalance={totalBalance}
         showExpenseModal={() => setIsExpenseModalVisible(true)}
         showIncomeModal={() => setIsIncomeModalVisible(true)}
       />
@@ -114,7 +146,8 @@ const Dashboard = () => {
             handleIncomeCancel={handleIncomeCancel}
             onFinish={onFinish}
           />
-          </>
+          <TransactionsTable transactions={transactions} />
+        </>
       )}
     </div>
   );
