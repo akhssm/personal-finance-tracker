@@ -57,14 +57,14 @@ const Dashboard = () => {
         transaction
       );
       console.log("Document written with ID: ", docRef.id);
-      toast.success("Transaction added successfully!");
+      if (!many) toast.success("Transaction added successfully!");
       let newArr = transactions;
       newArr.push(transaction);
       setTransactions(newArr);
       calculateBalance();
     } catch (e) {
       console.error("Error adding document: ", e);
-      toast.error("Failed to add transaction. Please try again.");
+      if (!many) toast.error("Failed to add transaction. Please try again.");
     }
   }
 
@@ -146,7 +146,10 @@ const Dashboard = () => {
             handleIncomeCancel={handleIncomeCancel}
             onFinish={onFinish}
           />
-          <TransactionsTable transactions={transactions} />
+          <TransactionsTable 
+            transactions={transactions} 
+            addTransaction={addTransaction} 
+            fetchTransactions={fetchTransactions} />
         </>
       )}
     </div>
