@@ -7,6 +7,12 @@
   --shadow-color: 0px 0px 30px 8px rgba(227, 227, 227, 0.75);
 }
 
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 body {
   margin: 0;
   font-family: 'Montserrat', sans-serif;
@@ -24,9 +30,6 @@ input {
   padding: 0.5rem 0rem;
   width: 100%;
   border-radius: 0;
-}
-
-.custom-input {
   margin-top: -1rem !important;
 }
 
@@ -38,4 +41,37 @@ input {
   outline: none;
   opacity: 1;
   transition: all 0.3s;
+}
+
+.input-flex {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  box-shadow: var(--shadow-color);
+  border-radius: 0.5rem;
+  padding: 0.3rem 0.5rem;
+}
+
+.input-flex input {
+  width: 100%;
+  border: 0;
+  padding: 0.5rem;
+}
+
+.input-flex input:focus {
+  outline: none;
+}
+
+.select-input {
+  min-width: 160px;
+  display: flex;
+  align-items: center;
+  box-shadow: var(--shadow-color);
+  border-radius: 0.5rem !important;
+  padding: 0.2rem 0.5rem;
+}
+
+.select-input > div {
+  border: 0 !important;
 }
