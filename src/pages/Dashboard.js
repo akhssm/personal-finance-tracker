@@ -10,6 +10,8 @@ import { auth, db } from '../firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import moment from 'moment';
 import TransactionsTable from '../components/TransactionsTable';
+import ChartComponent from '../components/Charts';
+import NoTransactions from '../components/NoTransactions';
 
 const Dashboard = () => {
   // const transactions = [
@@ -37,6 +39,7 @@ const Dashboard = () => {
   const [income, setIncome] = useState(0);
   const [expense, setExpense] = useState(0);
   const [totalBalance, setTotalBalance] = useState(0);
+  const [sortKey, setSortKey] = useState("date");
 
   const onFinish = (values, type) => {
     const newTransaction = {
@@ -119,6 +122,12 @@ const Dashboard = () => {
     setIsIncomeModalVisible(false);
   };
 
+  let sortedTransactions = transactions.sort((a, b) => {
+    if (sortKey === "date") {
+      return new Date(a.date) - new Date(b.date);
+    }
+  });
+
   return (
     <div>
       <Header />
@@ -134,6 +143,12 @@ const Dashboard = () => {
         showExpenseModal={() => setIsExpenseModalVisible(true)}
         showIncomeModal={() => setIsIncomeModalVisible(true)}
       />
+
+      {transactions && transactions.length !=0 ? (
+        <ChartComponent sortedTransactions={sortedTransactions} />
+      ) : (
+        <NoTransactions />
+      )}
 
       <AddExpenseModal
             isExpenseModalVisible={isExpenseModalVisible}
