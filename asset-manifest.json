@@ -1,18 +1,18 @@
 {
   "files": {
-    "main.css": "/static/css/main.e3917b77.css",
-    "main.js": "/static/js/main.40ddc0b1.js",
-    "static/js/453.c422d156.chunk.js": "/static/js/453.c422d156.chunk.js",
-    "static/media/user.jpg": "/static/media/user.034e09c7617481404c1b.jpg",
-    "static/media/transactions.svg": "/static/media/transactions.59732a72a0eab61b0f23b9eef7a201da.svg",
-    "static/media/search.svg": "/static/media/search.cff90756ad5cb265c8de2a538db1c479.svg",
-    "index.html": "/index.html",
-    "main.e3917b77.css.map": "/static/css/main.e3917b77.css.map",
-    "main.40ddc0b1.js.map": "/static/js/main.40ddc0b1.js.map",
-    "453.c422d156.chunk.js.map": "/static/js/453.c422d156.chunk.js.map"
+    "main.css": "/personal-finance-tracker/static/css/main.e3917b77.css",
+    "main.js": "/personal-finance-tracker/static/js/main.1671d615.js",
+    "static/js/453.c422d156.chunk.js": "/personal-finance-tracker/static/js/453.c422d156.chunk.js",
+    "static/media/user.jpg": "/personal-finance-tracker/static/media/user.034e09c7617481404c1b.jpg",
+    "static/media/transactions.svg": "/personal-finance-tracker/static/media/transactions.59732a72a0eab61b0f23b9eef7a201da.svg",
+    "index.html": "/personal-finance-tracker/index.html",
+    "static/media/search.svg": "/personal-finance-tracker/static/media/search.cff90756ad5cb265c8de2a538db1c479.svg",
+    "main.e3917b77.css.map": "/personal-finance-tracker/static/css/main.e3917b77.css.map",
+    "main.1671d615.js.map": "/personal-finance-tracker/static/js/main.1671d615.js.map",
+    "453.c422d156.chunk.js.map": "/personal-finance-tracker/static/js/453.c422d156.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e3917b77.css",
-    "static/js/main.40ddc0b1.js"
+    "static/js/main.1671d615.js"
   ]
 }
